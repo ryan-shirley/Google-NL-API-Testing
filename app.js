@@ -6,8 +6,6 @@ const pdf = require('pdf-parse');
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
-
-
 // Home Page
 app.get('/', (req, res) => {
     console.log('Loading home page')
