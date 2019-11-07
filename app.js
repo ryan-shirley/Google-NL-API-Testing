@@ -26,13 +26,14 @@ app.get('/categorise-pdf', (req, res) => {
         // categories.then(data => {
         //     console.log(data);
         // })
+
         const cat = sampleTextClassification().categories[0]
-        res.send(`The top category was ${cat[0].name} with ${cat[0].confidence}.`)
+        res.send(`The top category was ${cat.name} with ${cat.confidence}.`)
     })
     .catch(error => {
         // handle exceptions
         console.log('Something went wrong! 🤯');
-         
+        res.send(`Something went wrong! 🤯 Error: ${error}`)
     })
     
     // res.send('Processing PDF... 🤓')
