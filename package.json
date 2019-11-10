@@ -4,14 +4,14 @@
   "description": "Google NL API Testing",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "live": "nodemon app.js"
   },
   "author": "Ryan Shirley",
   "license": "ISC",
   "dependencies": {
     "@google-cloud/language": "^3.5.1",
     "express": "^4.17.1",
-    "pdf-parse": "^1.1.1",
-    "live": "nodemon server.js"
+    "pdf-parse": "^1.1.1"
   }
 }

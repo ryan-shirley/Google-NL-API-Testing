@@ -1,8 +1,6 @@
 const express = require('express')
 const app = express()
 const port = 3000
-const fs = require('fs');
-const pdf = require('pdf-parse');
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))
 
@@ -13,30 +11,28 @@ app.get('/', (req, res) => {
     res.send('Hello World!')
 })
 
-// Categorisation of PDF
 app.get('/categorise-pdf', (req, res) => {
 
-    // Get PDF
-    let doc = fs.readFileSync('testing-documents/testdoc.pdf')
+    // Get text from pdf
+    pdfToText('testing-documents/testdoc.pdf')
+    .then(value => {
+        const { text, cleanedText } = value 
 
-    // Retrieve text from the PDF
-    pdf(doc).then(data => {
-        // Derive categories from text
+        // Get category from text (sample response only)
+        const [cat] = sampleTextClassification(text).categories
+        let { name, confidence } = cat
+
+        // Derive categories from text (Google NL API)
         // const categories = classifyText(data.text)
+        // console.log('Categories');
         // categories.then(data => {
-        //     console.log(data);
+        //     let { name, confidence } = data
+        //     console.log(`Name: ${name}, Confidence: ${confidence}.`);
         // })
 
-        const cat = sampleTextClassification().categories[0]
-        res.send(`The top category was ${cat.name} with ${cat.confidence}.`)
-    })
-    .catch(error => {
-        // handle exceptions
-        console.log('Something went wrong! 🤯');
-        res.send(`Something went wrong! 🤯 Error: ${error}`)
+        res.send('Woo! 😃 We were able to get the categories from the PDF you provided.')
     })
     
-    // res.send('Processing PDF... 🤓')
 })
 
 /**
@@ -45,8 +41,25 @@ app.get('/categorise-pdf', (req, res) => {
  * @param {string} file Path to the PDF file
  * @return {string} Text retreived from PDF.
  */
-function pdfToText(file) {
+async function pdfToText(file) {
+    // Imports the file system with pdf parser
+    const fs = require('fs');
+    const pdf = require('pdf-parse');
 
+    // Get PDF
+    let doc = fs.readFileSync(file)
+
+    // Retrieve text from the PDF
+    const { text } = await pdf(doc)
+
+    // Clean text to remove characters
+    let cleanedText = text.replace(/(\s\n)/gm, "").replace(/(\n)/gm, " ")
+
+    // Return both text for comparison
+    return [
+        { text, len: text.length },
+        { cleanedText, len: cleanedText.length }
+    ]
 }
 
 /**
@@ -77,12 +90,12 @@ async function classifyText(text) {
 /**
  * Sample result of text classification for testing
  *
- * @return {obj} Category object
+ * @return {obj} Object with categories array
  */
 function sampleTextClassification(){
     const category = {
         categories: [
-          { name: '/Business & Industrial', confidence: 0.5099999904632568 }
+          { name: '/Business & Industrial/Transportation & Logistics/Packaging', confidence: 0.5099999904632568 }
         ]
     }
 
