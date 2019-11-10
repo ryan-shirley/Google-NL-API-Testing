@@ -23,10 +23,10 @@ app.get('/categorise-pdf', (req, res) => {
         let { name, confidence } = cat
 
         // Derive categories from text (Google NL API)
-        // const categories = classifyText(data.text)
+        // const categories = classifyText(cleanedText)
         // console.log('Categories');
-        // categories.then(data => {
-        //     let { name, confidence } = data
+        // categories.then(cat => {
+        //     let { name, confidence } = cat
         //     console.log(`Name: ${name}, Confidence: ${confidence}.`);
         // })
 
@@ -39,7 +39,7 @@ app.get('/categorise-pdf', (req, res) => {
  * Retrieve text from a PDF
  *
  * @param {string} file Path to the PDF file
- * @return {string} Text retreived from PDF.
+ * @return {array} Objects with text retreived from PDF.
  */
 async function pdfToText(file) {
     // Imports the file system with pdf parser
